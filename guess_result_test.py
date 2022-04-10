@@ -1,0 +1,237 @@
+import doctest
+import wordle_util
+from guess_result import GuessResult
+
+
+def guess_result_test(answer, guess):
+    """
+    >>> for answer, guess in [('drawn', 'ready'), ('quack', 'plead'), ('swore', 'throw'), ('minus', 'tread'), ('dutch', 'niece'), ('facet', 'kneed'), ('legal', 'cyber'), ('polka', 'wider'), ('humid', 'abbey'), ('rider', 'stoke'), ('leave', 'pedal'), ('scuba', 'scene'), ('niece', 'humid'), ('crump', 'pivot'), ('wield', 'worth'), ('slung', 'civil'), ('karma', 'droit'), ('smear', 'motif'), ('glyph', 'align'), ('aptly', 'scald')]:
+    ...     print(f'{answer}, {guess} -> {repr(GuessResult(answer=answer, guess=guess))}')
+    drawn, ready -> ready,1-21-
+    quack, plead -> plead,---1-
+    swore, throw -> throw,--111
+    minus, tread -> tread,-----
+    dutch, niece -> niece,---2-
+    facet, kneed -> kneed,---2-
+    legal, cyber -> cyber,---1-
+    polka, wider -> wider,-----
+    humid, abbey -> abbey,-----
+    rider, stoke -> stoke,----1
+    leave, pedal -> pedal,-2-11
+    scuba, scene -> scene,22---
+    niece, humid -> humid,---1-
+    crump, pivot -> pivot,1----
+    wield, worth -> worth,2----
+    slung, civil -> civil,----1
+    karma, droit -> droit,-1---
+    smear, motif -> motif,1----
+    glyph, align -> align,-2-1-
+    aptly, scald -> scald,--12-
+
+    >>> guess = 'raise'
+    >>> for answer in ['stair', 'aider', 'acrid', 'irate', 'shear', 'arson', 'scare', 'after', 'abhor', 'briar', 'arise', 'afire', 'artsy', 'arose', 'adore', 'miser', 'sprig', 'cider', 'birch', 'nadir', 'first', 'dirge', 'ester', 'safer', 'skier', 'scorn', 'satyr', 'shirk', 'shire', 'score', 'beret', 'baker', 'brief', 'cress', 'blurb', 'baron', 'cairn', 'harsh', 'parse', 'barge', 'brick', 'brisk', 'bribe', 'brush', 'curse', 'borne', 'sepia', 'sigma', 'aisle', 'email', 'admin', 'rival', 'quasi', 'image', 'ashen', 'ascot', 'aside', 'scale', 'abbey', 'reach', 'alien', 'beast', 'aback', 'roach', 'roast', 'aging', 'amiss', 'abide', 'abyss', 'abase', 'abate', 'islet', 'resin', 'bison', 'risky', 'basic', 'issue', 'befit', 'refit', 'biddy', 'right', 'rabbi', 'rinse', 'ridge', 'cabin', 'gipsy', 'belie', 'beset', 'rebus', 'easel', 'shied', 'bonus', 'rusty', 'raspy', 'basal', 'saint', 'baste', 'scion', 'seize', 'ensue', 'beech', 'rebel', 'racer', 'reign', 'bagel', 'being', 'exist', 'bless', 'block', 'robot', 'radar', 'rainy', 'raise', 'range', 'rhino', 'roost', 'reuse', 'revue', 'bacon', 'daily', 'daisy', 'maize', 'gassy', 'cause', 'badge', 'blimp', 'bliss', 'guise', 'chide', 'blush', 'chose', 'belle']:
+    ...     print(f'{answer}, {guess} -> {repr(GuessResult(answer=answer, guess=guess))}')
+    stair, raise -> raise,1111-
+    aider, raise -> raise,111-1
+    acrid, raise -> raise,111--
+    irate, raise -> raise,111-2
+    shear, raise -> raise,11-11
+    arson, raise -> raise,11-1-
+    scare, raise -> raise,11-12
+    after, raise -> raise,11--1
+    abhor, raise -> raise,11---
+    briar, raise -> raise,112--
+    arise, raise -> raise,11222
+    afire, raise -> raise,112-2
+    artsy, raise -> raise,11-2-
+    arose, raise -> raise,11-22
+    adore, raise -> raise,11--2
+    miser, raise -> raise,1-111
+    sprig, raise -> raise,1-11-
+    cider, raise -> raise,1-1-1
+    birch, raise -> raise,1-1--
+    nadir, raise -> raise,121--
+    first, raise -> raise,1-12-
+    dirge, raise -> raise,1-1-2
+    ester, raise -> raise,1--11
+    safer, raise -> raise,12-11
+    skier, raise -> raise,1-211
+    scorn, raise -> raise,1--1-
+    satyr, raise -> raise,12-1-
+    shirk, raise -> raise,1-21-
+    shire, raise -> raise,1-212
+    score, raise -> raise,1--12
+    beret, raise -> raise,1---1
+    baker, raise -> raise,12--1
+    brief, raise -> raise,1-2-1
+    cress, raise -> raise,1--21
+    blurb, raise -> raise,1----
+    baron, raise -> raise,12---
+    cairn, raise -> raise,122--
+    harsh, raise -> raise,12-2-
+    parse, raise -> raise,12-22
+    barge, raise -> raise,12--2
+    brick, raise -> raise,1-2--
+    brisk, raise -> raise,1-22-
+    bribe, raise -> raise,1-2-2
+    brush, raise -> raise,1--2-
+    curse, raise -> raise,1--22
+    borne, raise -> raise,1---2
+    sepia, raise -> raise,-1111
+    sigma, raise -> raise,-111-
+    aisle, raise -> raise,-1112
+    email, raise -> raise,-11-1
+    admin, raise -> raise,-11--
+    rival, raise -> raise,211--
+    quasi, raise -> raise,-112-
+    image, raise -> raise,-11-2
+    ashen, raise -> raise,-1-11
+    ascot, raise -> raise,-1-1-
+    aside, raise -> raise,-1212
+    scale, raise -> raise,-1-12
+    abbey, raise -> raise,-1--1
+    reach, raise -> raise,21--1
+    alien, raise -> raise,-12-1
+    beast, raise -> raise,-1-21
+    aback, raise -> raise,-1---
+    roach, raise -> raise,21---
+    roast, raise -> raise,21-2-
+    aging, raise -> raise,-12--
+    amiss, raise -> raise,-122-
+    abide, raise -> raise,-12-2
+    abyss, raise -> raise,-1-2-
+    abase, raise -> raise,-1-22
+    abate, raise -> raise,-1--2
+    islet, raise -> raise,--111
+    resin, raise -> raise,2-111
+    bison, raise -> raise,--11-
+    risky, raise -> raise,2-11-
+    basic, raise -> raise,-211-
+    issue, raise -> raise,--112
+    befit, raise -> raise,--1-1
+    refit, raise -> raise,2-1-1
+    biddy, raise -> raise,--1--
+    right, raise -> raise,2-1--
+    rabbi, raise -> raise,221--
+    rinse, raise -> raise,2-122
+    ridge, raise -> raise,2-1-2
+    cabin, raise -> raise,-21--
+    gipsy, raise -> raise,--12-
+    belie, raise -> raise,--1-2
+    beset, raise -> raise,---11
+    rebus, raise -> raise,2--11
+    easel, raise -> raise,-2-11
+    shied, raise -> raise,--211
+    bonus, raise -> raise,---1-
+    rusty, raise -> raise,2--1-
+    raspy, raise -> raise,22-1-
+    basal, raise -> raise,-2-1-
+    saint, raise -> raise,-221-
+    baste, raise -> raise,-2-12
+    scion, raise -> raise,--21-
+    seize, raise -> raise,--212
+    ensue, raise -> raise,---12
+    beech, raise -> raise,----1
+    rebel, raise -> raise,2---1
+    racer, raise -> raise,22--1
+    reign, raise -> raise,2-2-1
+    bagel, raise -> raise,-2--1
+    being, raise -> raise,--2-1
+    exist, raise -> raise,--221
+    bless, raise -> raise,---21
+    block, raise -> raise,-----
+    robot, raise -> raise,2----
+    radar, raise -> raise,22---
+    rainy, raise -> raise,222--
+    raise, raise -> raise,22222
+    range, raise -> raise,22--2
+    rhino, raise -> raise,2-2--
+    roost, raise -> raise,2--2-
+    reuse, raise -> raise,2--22
+    revue, raise -> raise,2---2
+    bacon, raise -> raise,-2---
+    daily, raise -> raise,-22--
+    daisy, raise -> raise,-222-
+    maize, raise -> raise,-22-2
+    gassy, raise -> raise,-2-2-
+    cause, raise -> raise,-2-22
+    badge, raise -> raise,-2--2
+    blimp, raise -> raise,--2--
+    bliss, raise -> raise,--22-
+    guise, raise -> raise,--222
+    chide, raise -> raise,--2-2
+    blush, raise -> raise,---2-
+    chose, raise -> raise,---22
+    belle, raise -> raise,----2
+
+    >>> guess = 'eerie'
+    >>> for answer in ['breed', 'bleed', 'aider', 'after', 'defer', 'their', 'creme', 'alien', 'siren', 'liege', 'abbey', 'beech', 'beret', 'geese', 'corer', 'agree', 'sheik', 'obese', 'eager', 'easel', 'egret', 'emcee', 'briar', 'reign', 'afire', 'abhor', 'entry', 'erase', 'beard', 'refit', 'genre', 'braid', 'adore', 'aging', 'edict', 'elide', 'being', 'seize', 'birch', 'dirge', 'abide', 'aback', 'ebony', 'eerie', 'early', 'elfin', 'eagle', 'beach', 'berry', 'merit', 'merge', 'befit', 'belie', 'belle', 'aorta', 'acrid', 'barge', 'admin', 'cutie', 'abase']:
+    ...     print(f'{answer}, {guess} -> {repr(GuessResult(answer=answer, guess=guess))}')
+    breed, eerie -> eerie,111--
+    bleed, eerie -> eerie,11---
+    aider, eerie -> eerie,1-11-
+    after, eerie -> eerie,1-1--
+    defer, eerie -> eerie,121--
+    their, eerie -> eerie,1-12-
+    creme, eerie -> eerie,1-1-2
+    alien, eerie -> eerie,1--1-
+    siren, eerie -> eerie,1-21-
+    liege, eerie -> eerie,1--12
+    abbey, eerie -> eerie,1----
+    beech, eerie -> eerie,12---
+    beret, eerie -> eerie,122--
+    geese, eerie -> eerie,12--2
+    corer, eerie -> eerie,1-2--
+    agree, eerie -> eerie,1-2-2
+    sheik, eerie -> eerie,1--2-
+    obese, eerie -> eerie,1---2
+    eager, eerie -> eerie,211--
+    easel, eerie -> eerie,21---
+    egret, eerie -> eerie,212--
+    emcee, eerie -> eerie,21--2
+    briar, eerie -> eerie,--11-
+    reign, eerie -> eerie,-211-
+    afire, eerie -> eerie,--112
+    abhor, eerie -> eerie,--1--
+    entry, eerie -> eerie,2-1--
+    erase, eerie -> eerie,2-1-2
+    beard, eerie -> eerie,-21--
+    refit, eerie -> eerie,-212-
+    genre, eerie -> eerie,-21-2
+    braid, eerie -> eerie,--12-
+    adore, eerie -> eerie,--1-2
+    aging, eerie -> eerie,---1-
+    edict, eerie -> eerie,2--1-
+    elide, eerie -> eerie,2--12
+    being, eerie -> eerie,-2-1-
+    seize, eerie -> eerie,-2-12
+    birch, eerie -> eerie,--21-
+    dirge, eerie -> eerie,--212
+    abide, eerie -> eerie,---12
+    aback, eerie -> eerie,-----
+    ebony, eerie -> eerie,2----
+    eerie, eerie -> eerie,22222
+    early, eerie -> eerie,2-2--
+    elfin, eerie -> eerie,2--2-
+    eagle, eerie -> eerie,2---2
+    beach, eerie -> eerie,-2---
+    berry, eerie -> eerie,-22--
+    merit, eerie -> eerie,-222-
+    merge, eerie -> eerie,-22-2
+    befit, eerie -> eerie,-2-2-
+    belie, eerie -> eerie,-2-22
+    belle, eerie -> eerie,-2--2
+    aorta, eerie -> eerie,--2--
+    acrid, eerie -> eerie,--22-
+    barge, eerie -> eerie,--2-2
+    admin, eerie -> eerie,---2-
+    cutie, eerie -> eerie,---22
+    abase, eerie -> eerie,----2
+
+    """
+
+    pass
+
+
+if __name__ == '__main__':
+    doctest.testmod()
